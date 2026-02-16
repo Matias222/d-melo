@@ -1,0 +1,9 @@
+{
+  "name": "damelo",
+  "description": "Share and manage AI assistant sessions with your teams. Export and import sessions so nothing is missed.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Matias Avendano",
+    "email": "contact@example.com"
+  }
+}

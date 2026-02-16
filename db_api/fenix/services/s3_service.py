@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Optional
 import os
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 
 load_dotenv()
 
@@ -23,6 +24,25 @@ class S3Service:
         )
         self.bucket_name = os.getenv('S3_BUCKET_NAME')
 
+    def _format_html(self, html_content: str) -> str:
+        """
+        Formatea HTML minificado a HTML bien indentado y estructurado.
+
+        Args:
+            html_content: HTML en una sola línea o minificado
+
+        Returns:
+            HTML formateado con indentación correcta
+        """
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            formatted_html = soup.prettify()
+            return formatted_html
+        except Exception as e:
+            print(f"Warning: Could not format HTML: {e}")
+            # Si falla el formateo, devolver el original
+            return html_content
+
     def upload_session_report(
         self,
         session_id: str,
@@ -34,7 +54,7 @@ class S3Service:
 
         Args:
             session_id: UUID de la sesión
-            content: Contenido markdown del informe
+            content: Contenido HTML del informe (puede estar minificado)
             github_handle: Handle de GitHub del owner
 
         Returns:
@@ -48,13 +68,16 @@ class S3Service:
         s3_key = f"reports/{github_handle}/{file_name}"
 
         try:
+            # Formatear HTML antes de subir
+            formatted_content = self._format_html(content)
+
             # Subir archivo a S3
             # El acceso público se configura via Bucket Policy (no ACL)
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
                 Key=s3_key,
-                Body=content.encode('utf-8'),
-                ContentType='text/markdown',
+                Body=formatted_content.encode('utf-8'),
+                ContentType='text/html; charset=utf-8',
                 ContentDisposition='inline',
                 Metadata={
                     'session_id': session_id,

@@ -30,7 +30,7 @@ SETUP = os.environ.get("SETUP")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["3jcimmhwfp.us-east-1.awsapprunner.com"]
+ALLOWED_HOSTS = ["3jcimmhwfp.us-east-1.awsapprunner.com","localhost"]
 
 # Application definition
 

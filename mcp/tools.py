@@ -299,7 +299,7 @@ async def export_session(
     Args:
         title: Título de la sesión
         description: Breve descripción de lo que cubre la sesión
-        session_data: String formateado en markdown con el contenido de la sesión
+        session_data: String formateado en HTML con el contenido completo de la sesión
         github_handle: El handle de GitHub del usuario autenticado
         repo: Repositorio en formato 'owner/repo' (opcional)
         topic: Si se proporciona, solo incluir las partes relacionadas con este tema (opcional)

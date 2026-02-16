@@ -50,7 +50,7 @@ class Session(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sessions')
     is_public = models.BooleanField(default=False)
 
-    # S3 Report URL (always .md files)
+    # S3 Report URL (always .html files)
     report_url = models.URLField(max_length=1000, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

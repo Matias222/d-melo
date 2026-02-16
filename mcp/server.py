@@ -51,17 +51,20 @@ mcp = FastMCP(
 
         All sessions are stored securely and can be shared with your team members.
 
-        **CRITICAL: All session_data MUST be properly formatted Markdown (.md)**
+        **CRITICAL: All session_data MUST be properly formatted HTML**
 
-        The session_data parameter accepts ONLY valid Markdown format. This will be saved as a .md file.
+        The session_data parameter accepts ONLY valid HTML format. This will be saved as an .html file.
 
-        **Required Markdown formatting:**
-        - Use proper headings (# ## ###)
-        - Code blocks with language specification (```python, ```bash, etc.)
-        - Proper lists (- or 1. 2. 3.)
-        - Bold/italic for emphasis (**bold** *italic*)
-        - Links in markdown format: [text](url)
-        - Structured sections with clear hierarchy
+        **Required HTML formatting:**
+        - Use proper HTML structure with <!DOCTYPE html>, <html>, <head>, and <body> tags
+        - Use semantic HTML5 tags: <header>, <main>, <section>, <article>, <footer>
+        - Use heading tags (<h1>, <h2>, <h3>, etc.) for document structure
+        - Use <pre><code> blocks for code snippets, with class attribute for syntax highlighting (e.g., <code class="language-python">)
+        - Use <ul>/<ol> and <li> for lists
+        - Use <strong> and <em> for emphasis
+        - Use <a href="url"> for links
+        - Include proper CSS styling in <style> tags or inline for better presentation
+        - Ensure all tags are properly closed and nested
         """
     ),
     auth=auth
@@ -178,11 +181,13 @@ async def share_session_with_team_tool(
         "Export and save the current session. "
         "If 'topic' is provided, only include conversation and changes relevant to that topic (thematic export). "
         "If 'topic' is omitted, export the entire session. "
-        "CRITICAL: session_data MUST be a PROPERLY FORMATTED MARKDOWN string (.md format) with proper headings (# ## ###), "
-        "code blocks (```language), lists, and structure. This will be saved as a .md file. "
+        "CRITICAL: session_data MUST be a PROPERLY FORMATTED HTML string with complete HTML structure "
+        "including <!DOCTYPE html>, <html>, <head>, and <body> tags. Use semantic HTML5 tags (<header>, <main>, <section>, <article>), "
+        "heading tags (<h1>, <h2>, <h3>), <pre><code class='language-*'> for code blocks, and proper CSS styling. "
+        "This will be saved as an .html file. "
         "The summary must comprehensively represent the conversation and insights, detailed enough to understand without reading the full conversation. "
         "IMPORTANT: Run 'git remote -v' to get the repository origin URL and include it in the 'repo' parameter. "
-        "Returns a report_url link to the generated .md file."
+        "Returns a report_url link to the generated .html file."
     ),
     annotations={
         "readOnlyHint": False,
@@ -194,7 +199,7 @@ async def share_session_with_team_tool(
 async def export_session_tool(
     title: Annotated[str, Field(description="Title for the session")],
     description: Annotated[str, Field(description="Short description of what the session covers")],
-    session_data: Annotated[str, Field(description="Markdown-formatted string with the session content")],
+    session_data: Annotated[str, Field(description="HTML-formatted string with the complete session content including proper HTML structure")],
     repo: Annotated[Optional[str], Field(description="Repository origin (.git url) run git remote -v to check if there is one")] = None,
     topic: Annotated[Optional[str], Field(
         description="If set, only the parts of the session related to this topic should be included in session_data"

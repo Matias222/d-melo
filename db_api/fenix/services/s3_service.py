@@ -1,5 +1,5 @@
 """
-S3 Service para subir informes de sesiones en formato .md
+S3 Service para subir informes de sesiones en formato .html
 """
 import boto3
 from botocore.exceptions import ClientError
@@ -30,7 +30,7 @@ class S3Service:
         github_handle: str
     ) -> Optional[str]:
         """
-        Sube un informe de sesión a S3 en formato .md
+        Sube un informe de sesión a S3 en formato .html
 
         Args:
             session_id: UUID de la sesión
@@ -42,9 +42,9 @@ class S3Service:
         """
         # Generar nombre del archivo con timestamp
         timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
-        file_name = f"{session_id}_{timestamp}.md"
+        file_name = f"{session_id}_{timestamp}.html"
 
-        # Path en S3: reports/{github_handle}/{session_id}_{timestamp}.md
+        # Path en S3: reports/{github_handle}/{session_id}_{timestamp}.html
         s3_key = f"reports/{github_handle}/{file_name}"
 
         try:

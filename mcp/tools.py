@@ -285,6 +285,50 @@ async def share_session_with_team(
     )
 
 
+async def update_session(
+    session_id: str,
+    session_data: str,
+    github_handle: str,
+) -> str:
+    """
+    Actualiza el contenido (session_data) de una sesión existente.
+
+    Args:
+        session_id: UUID de la sesión a modificar
+        session_data: Nuevo contenido HTML de la sesión
+        github_handle: El handle de GitHub del usuario autenticado
+
+    Returns:
+        String con el resultado de la operación
+    """
+    payload = {"session_data": session_data}
+
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.patch(
+            f"{API_URL}/sessions/{session_id}",
+            headers=utils.get_api_headers(github_handle),
+            json=payload,
+        )
+
+    if resp.status_code == 403:
+        raise ToolError("Access denied: only the session owner can update it.")
+    if resp.status_code == 404:
+        raise ToolError(f"Session '{session_id}' not found.")
+
+    if resp.status_code != 200:
+        detail = resp.json().get("detail") if resp.status_code >= 400 else None
+        utils.handle_api_error(resp.status_code, detail)
+
+    data = resp.json()
+
+    return (
+        f"Session updated successfully!\n\n"
+        f"**ID:** `{data.get('id', session_id)}`\n"
+        f"**Title:** {data.get('title', 'N/A')}\n"
+        f"**Updated:** {data.get('updated_at', 'N/A')}"
+    )
+
+
 async def export_session(
     title: str,
     description: str,

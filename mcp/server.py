@@ -176,6 +176,29 @@ async def share_session_with_team_tool(
 
 
 @mcp.tool(
+    name="update_session",
+    description=(
+        "Update the content (session_data) of an existing session. "
+        "Only the session owner can update it. "
+        "CRITICAL: session_data MUST be a PROPERLY FORMATTED HTML string with complete HTML structure "
+        "including <!DOCTYPE html>, <html>, <head>, and <body> tags."
+    ),
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": True,
+    },
+)
+async def update_session_tool(
+    session_id: Annotated[str, Field(description="UUID of the session to update")],
+    session_data: Annotated[str, Field(description="New HTML-formatted content for the session")],
+) -> str:
+    """Actualiza el contenido de una sesión existente."""
+    github_handle = utils.get_github_handle()
+    return await tools.update_session(session_id, session_data, github_handle)
+
+
+@mcp.tool(
     name="export_session",
     description=(
         "Export and save the current session. "
